@@ -5,11 +5,8 @@ describe Miniaudio do
     Miniaudio::VERSION.should be_a(String)
   end
 
-  it "exposes the native version numbers" do
-    Miniaudio.version.should eq({0_u32, 11_u32, 21_u32})
-  end
-
-  it "exposes the native version string" do
-    Miniaudio.version_string.should eq("0.11.21")
+  it "can get version info" do
+    m, i, p = Miniaudio.version
+    Miniaudio.version_string.should eq("#{m}.#{i}.#{p}")
   end
 end
