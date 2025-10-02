@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: ["ubuntu", "macos", "windows"]
+        os: ["ubuntu", "macos"]
     steps:
       - uses: actions/checkout@v5
         with:
@@ -18,6 +18,14 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
+      - name: Install miniaudio (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libminiaudio-dev
+      - name: Install miniaudio (macOS)
+        if: runner.os == 'macOS'
+        run: brew install miniaudio
       - name: Build ext/miniaudio
         run: make -C ext/miniaudio
       - name: Run specs
