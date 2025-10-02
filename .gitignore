@@ -1,0 +1,25 @@
+# Build artifacts
+/bin/
+/tmp/
+*.o
+*.a
+*.lock
+
+# ext build artifacts
+/ext/**/miniaudio_impl.o
+/ext/**/libminiaudio.a
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+/.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*~
+# Logs
+.log
