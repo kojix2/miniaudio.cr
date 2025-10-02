@@ -7,6 +7,6 @@ authors:
 crystal: '>= 1.17.0'
 
 postinstall:
-  make -C ext/miniaudio
+  - make -C ext
 
 license: MIT

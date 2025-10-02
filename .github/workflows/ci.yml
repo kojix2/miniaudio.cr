@@ -18,15 +18,7 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
-      - name: Install miniaudio (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libminiaudio-dev
-      - name: Install miniaudio (macOS)
-        if: runner.os == 'macOS'
-        run: brew install miniaudio
       - name: Build ext/miniaudio
-        run: make -C ext/miniaudio
+        run: make -C ext
       - name: Run specs
         run: crystal spec --error-trace
