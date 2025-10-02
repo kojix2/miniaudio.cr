@@ -1,6 +1,6 @@
 # miniaudio
 
-TODO: Write a description here
+:sound: [miniaudio](https://github.com/mackron/miniaudio) - the tiny cross-platform audio engine - for Crystal
 
 ## Installation
 
@@ -9,7 +9,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      miniaudio:
-       github: your-github-user/miniaudio
+       github: kojix2/miniaudio.cr
    ```
 
 2. Run `shards install`
@@ -19,8 +19,6 @@ TODO: Write a description here
 ```crystal
 require "miniaudio"
 ```
-
-TODO: Write usage instructions here
 
 ## Development
 
@@ -33,7 +31,3 @@ TODO: Write development instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
-## Contributors
-
-- [kojix2](https://github.com/your-github-user) - creator and maintainer

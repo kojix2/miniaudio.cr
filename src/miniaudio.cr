@@ -1,6 +1,5 @@
-# TODO: Write documentation for `Miniaudio`
-module Miniaudio
-  VERSION = "0.1.0"
+require "./miniaudio/lib_miniaudio"
 
-  # TODO: Put your code here
+module Miniaudio
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
 end
