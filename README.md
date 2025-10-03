@@ -2,6 +2,8 @@
 
 :sound: [miniaudio](https://github.com/mackron/miniaudio) - the tiny cross-platform audio engine - for Crystal
 
+:construction: Under construction
+
 ## Installation
 
 1. Add the dependency to your `shard.yml`:
