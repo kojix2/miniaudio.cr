@@ -17,9 +17,6 @@ AR      ?= ar
 CSTD    ?= -std=c99
 OPT     ?= -O2
 
-# Detect MSVC (cl) in PATH (works on bash/msys/dash). Empty if not found.
-CL := $(shell command -v cl 2>/dev/null || true)
-
 # Detect uname for deciding PIC flag (safe even on Windows bash).
 UNAME_S := $(shell uname -s 2>/dev/null || echo Unknown)
 
@@ -41,8 +38,22 @@ RM_RF   := rm -rf
 .SUFFIXES:
 .DELETE_ON_ERROR:
 
-# Build rules
-ifeq ($(CL),)
+# Detect MSVC by presence of Visual Studio environment variables.
+ifneq ($(VCINSTALLDIR)$(VSINSTALLDIR)$(VisualStudioVersion)$(VSCMD_VER),)
+  all: $(LIB_MSVC)
+
+  $(OBJDIR):
+	$(MKDIR_P) "$(OBJDIR)"
+
+  MSVC_CFLAGS ?= -nologo -O2 -MD -W3
+
+  $(OBJ_MSVC): $(SRC) | $(OBJDIR)
+	cl $(MSVC_CFLAGS) -c "$(SRC)" -Fo"$(OBJ_MSVC)"
+
+  $(LIB_MSVC): $(OBJ_MSVC)
+	lib -nologo -OUT:"$(LIB_MSVC)" "$(OBJ_MSVC)"
+
+else
   # POSIX / MinGW path (cc + ar)
   all: $(STATIC_UNIX)
 
@@ -54,20 +65,6 @@ ifeq ($(CL),)
 
   $(STATIC_UNIX): $(OBJ_UNIX)
 	$(AR) rcs "$(STATIC_UNIX)" "$(OBJ_UNIX)"
-
-else
-  # MSVC path (cl + lib)
-  # Requires VS dev environment.
-  all: $(LIB_MSVC)
-
-  $(OBJDIR):
-	$(MKDIR_P) "$(OBJDIR)"
-
-  $(OBJ_MSVC): $(SRC) | $(OBJDIR)
-	cl /nologo /O2 /MD /W3 /c "$(SRC)" /Fo"$(OBJ_MSVC)"
-
-  $(LIB_MSVC): $(OBJ_MSVC)
-	lib /nologo /OUT:"$(LIB_MSVC)" "$(OBJ_MSVC)"
 
 endif
 

@@ -1,5 +1,9 @@
 module Miniaudio
-  @[Link("miniaudio", ldflags: "-L#{__DIR__}/../../ext/miniaudio")]
+  {% if flag?(:msvc) %}
+    @[Link("miniaudio", ldflags: "/LIBPATH:#{__DIR__}\\..\\..\\ext\\miniaudio")]
+  {% else %}
+    @[Link("miniaudio", ldflags: "-L#{__DIR__}/../../ext/miniaudio")]
+  {% end %}
   lib LibMiniaudio
     alias MaResult = Int32
     alias MaUint32 = UInt32
