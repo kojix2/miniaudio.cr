@@ -44,23 +44,23 @@ module Miniaudio
       no_fixed_sized_callback : Void
       master_volume_factor : Void
       duplex_rb : Void
-      resampling : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7804:5)
-      playback : Struct   # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7814:5)
-      capture : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7840:5)
+      resampling : DeviceResampling
+      playback : DevicePlayback
+      capture : DeviceCapture
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7804:5)
+    struct DeviceResampling
       algorithm : Void
       p_backend_v_table : Pointer(Void)
       p_backend_user_data : Pointer(Void)
-      linear : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7809:9)
+      linear : DeviceResamplingLinear
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7809:9)
+    struct DeviceResamplingLinear
       lpf_order : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7814:5)
+    struct DevicePlayback
       p_id : Pointer(Void)
       id : Void
       name : StaticArray(LibC::Char, 256)
@@ -86,7 +86,7 @@ module Miniaudio
       input_cache_remaining : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7840:5)
+    struct DeviceCapture
       p_id : Pointer(Void)
       id : Void
       name : StaticArray(LibC::Char, 256)
@@ -762,19 +762,19 @@ module Miniaudio
       in_advance_frac : Void
       in_time_int : Void
       in_time_frac : Void
-      x0 : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5349:5)
-      x1 : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5354:5)
+      x0 : LinearResamplerX0
+      x1 : LinearResamplerX1
       lpf : Void
       _p_heap : Pointer(Void)
       _owns_heap : Void
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5349:5)
+    union LinearResamplerX0
       f32 : Pointer(LibC::Float)
       s16 : Pointer(Void)
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5354:5)
+    union LinearResamplerX1
       f32 : Pointer(LibC::Float)
       s16 : Pointer(Void)
     end
@@ -800,10 +800,10 @@ module Miniaudio
       algorithm : Void
       p_backend_v_table : Pointer(Void)
       p_backend_user_data : Pointer(Void)
-      linear : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5412:5)
+      linear : ResamplerConfigLinear
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5412:5)
+    struct ResamplerConfigLinear
       lpf_order : Void
     end
 
@@ -830,12 +830,12 @@ module Miniaudio
       channels : Void
       sample_rate_in : Void
       sample_rate_out : Void
-      state : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5429:5)
+      state : ResamplerState
       _p_heap : Pointer(Void)
       _owns_heap : Void
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5429:5)
+    union ResamplerState
       linear : Void
     end
 
@@ -874,12 +874,12 @@ module Miniaudio
       p_channel_map_in : Pointer(Void)
       p_channel_map_out : Pointer(Void)
       p_shuffle_table : Pointer(Void)
-      weights : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5567:5)
+      weights : ChannelConverterWeights
       _p_heap : Pointer(Void)
       _owns_heap : Void
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:5567:5)
+    union ChannelConverterWeights
       f32 : Pointer(Pointer(LibC::Float))
       s16 : Pointer(Pointer(Void))
     end
@@ -1292,48 +1292,48 @@ module Miniaudio
     fun slot_allocator_free = ma_slot_allocator_free(p_allocator : Pointer(Void), slot : Void)
 
     struct Job
-      toc : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6420:5)
+      toc : JobToc
       next : Void
       order : Void
-      data : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6433:5)
+      data : JobData
     end
 
-    union Union        # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6420:5)
-      breakup : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6422:9)
+    union JobToc
+      breakup : JobTocBreakup
       allocation : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6422:9)
+    struct JobTocBreakup
       code : Void
       slot : Void
       refcount : Void
     end
 
-    union Union                # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6433:5)
-      custom : Struct          # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6436:9)
-      resource_manager : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6444:9)
-      device : Union           # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6522:9)
+    union JobData
+      custom : JobDataCustom
+      resource_manager : JobDataResourceManager
+      device : JobDataDevice
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6436:9)
+    struct JobDataCustom
       proc : Void
       data0 : Void
       data1 : Void
     end
 
-    union Union                      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6444:9)
-      load_data_buffer_node : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6446:13)
-      free_data_buffer_node : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6458:13)
-      page_data_buffer_node : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6465:13)
-      load_data_buffer : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6474:13)
-      free_data_buffer : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6487:13)
-      load_data_stream : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6494:13)
-      free_data_stream : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6503:13)
-      page_data_stream : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6509:13)
-      seek_data_stream : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6514:13)
+    union JobDataResourceManager
+      load_data_buffer_node : JobDataResourceManagerLoadDataBufferNode
+      free_data_buffer_node : JobDataResourceManagerFreeDataBufferNode
+      page_data_buffer_node : JobDataResourceManagerPageDataBufferNode
+      load_data_buffer : JobDataResourceManagerLoadDataBuffer
+      free_data_buffer : JobDataResourceManagerFreeDataBuffer
+      load_data_stream : JobDataResourceManagerLoadDataStream
+      free_data_stream : JobDataResourceManagerFreeDataStream
+      page_data_stream : JobDataResourceManagerPageDataStream
+      seek_data_stream : JobDataResourceManagerSeekDataStream
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6446:13)
+    struct JobDataResourceManagerLoadDataBufferNode
       p_resource_manager : Pointer(Void)
       p_data_buffer_node : Pointer(Void)
       p_file_path : Pointer(LibC::Char)
@@ -1345,14 +1345,14 @@ module Miniaudio
       p_done_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6458:13)
+    struct JobDataResourceManagerFreeDataBufferNode
       p_resource_manager : Pointer(Void)
       p_data_buffer_node : Pointer(Void)
       p_done_notification : Pointer(Void)
       p_done_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6465:13)
+    struct JobDataResourceManagerPageDataBufferNode
       p_resource_manager : Pointer(Void)
       p_data_buffer_node : Pointer(Void)
       p_decoder : Pointer(Void)
@@ -1360,7 +1360,7 @@ module Miniaudio
       p_done_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6474:13)
+    struct JobDataResourceManagerLoadDataBuffer
       p_data_buffer : Pointer(Void)
       p_init_notification : Pointer(Void)
       p_done_notification : Pointer(Void)
@@ -1373,13 +1373,13 @@ module Miniaudio
       is_looping : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6487:13)
+    struct JobDataResourceManagerFreeDataBuffer
       p_data_buffer : Pointer(Void)
       p_done_notification : Pointer(Void)
       p_done_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6494:13)
+    struct JobDataResourceManagerLoadDataStream
       p_data_stream : Pointer(Void)
       p_file_path : Pointer(LibC::Char)
       p_file_path_w : Pointer(Void)
@@ -1388,31 +1388,31 @@ module Miniaudio
       p_init_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6503:13)
+    struct JobDataResourceManagerFreeDataStream
       p_data_stream : Pointer(Void)
       p_done_notification : Pointer(Void)
       p_done_fence : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6509:13)
+    struct JobDataResourceManagerPageDataStream
       p_data_stream : Pointer(Void)
       page_index : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6514:13)
+    struct JobDataResourceManagerSeekDataStream
       p_data_stream : Pointer(Void)
       frame_index : Void
     end
 
-    union Union      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6522:9)
-      aaudio : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6524:13)
+    union JobDataDevice
+      aaudio : JobDataDeviceAaudio
     end
 
-    union Union        # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6524:13)
-      reroute : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6526:17)
+    union JobDataDeviceAaudio
+      reroute : JobDataDeviceAaudioReroute
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6526:17)
+    struct JobDataDeviceAaudioReroute
       p_device : Pointer(Void)
       device_type : Void
     end
@@ -1473,29 +1473,29 @@ module Miniaudio
     struct DeviceNotification
       p_device : Pointer(Void)
       type : Void
-      data : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6790:5)
+      data : DeviceNotificationData
     end
 
-    union Union             # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6790:5)
-      started : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6792:9)
-      stopped : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6796:9)
-      rerouted : Struct     # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6800:9)
-      interruption : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6804:9)
+    union DeviceNotificationData
+      started : DeviceNotificationDataStarted
+      stopped : DeviceNotificationDataStopped
+      rerouted : DeviceNotificationDataRerouted
+      interruption : DeviceNotificationDataInterruption
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6792:9)
+    struct DeviceNotificationDataStarted
       _unused : LibC::Int
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6796:9)
+    struct DeviceNotificationDataStopped
       _unused : LibC::Int
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6800:9)
+    struct DeviceNotificationDataRerouted
       _unused : LibC::Int
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:6804:9)
+    struct DeviceNotificationDataInterruption
       _unused : LibC::Int
     end
 
@@ -1518,11 +1518,11 @@ module Miniaudio
       aaudio : Void
       opensl : Void
       webaudio : StaticArray(LibC::Char, 32)
-      custom : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7063:5)
+      custom : DeviceIdCustom
       nullbackend : LibC::Int
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7063:5)
+    union DeviceIdCustom
       i : LibC::Int
       s : StaticArray(LibC::Char, 256)
       p : Pointer(Void)
@@ -1536,36 +1536,36 @@ module Miniaudio
       thread_stack_size : Void
       p_user_data : Pointer(Void)
       allocation_callbacks : Void
-      dsound : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7317:5)
-      alsa : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7321:5)
-      pulse : Struct     # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7325:5)
-      coreaudio : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7331:5)
-      jack : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7338:5)
+      dsound : ContextConfigDsound
+      alsa : ContextConfigAlsa
+      pulse : ContextConfigPulse
+      coreaudio : ContextConfigCoreaudio
+      jack : ContextConfigJack
       custom : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7317:5)
+    struct ContextConfigDsound
       h_wnd : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7321:5)
+    struct ContextConfigAlsa
       use_verbose_device_enumeration : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7325:5)
+    struct ContextConfigPulse
       p_application_name : Pointer(LibC::Char)
       p_server_name : Pointer(LibC::Char)
       try_auto_spawn : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7331:5)
+    struct ContextConfigCoreaudio
       session_category : Void
       session_category_options : Void
       no_audio_session_activate : Void
       no_audio_session_deactivate : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7338:5)
+    struct ContextConfigJack
       p_client_name : Pointer(LibC::Char)
       try_start_server : Void
     end
@@ -1586,17 +1586,17 @@ module Miniaudio
       stop_callback : Void
       p_user_data : Pointer(Void)
       resampling : Void
-      playback : Struct  # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7119:5)
-      capture : Struct   # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7129:5)
-      wasapi : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7140:5)
-      alsa : Struct      # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7150:5)
-      pulse : Struct     # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7157:5)
-      coreaudio : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7163:5)
-      opensl : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7167:5)
-      aaudio : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7173:5)
+      playback : DeviceConfigPlayback
+      capture : DeviceConfigCapture
+      wasapi : DeviceConfigWasapi
+      alsa : DeviceConfigAlsa
+      pulse : DeviceConfigPulse
+      coreaudio : DeviceConfigCoreaudio
+      opensl : DeviceConfigOpensl
+      aaudio : DeviceConfigAaudio
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7119:5)
+    struct DeviceConfigPlayback
       p_device_id : Pointer(Void)
       format : Void
       channels : Void
@@ -1606,7 +1606,7 @@ module Miniaudio
       share_mode : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7129:5)
+    struct DeviceConfigCapture
       p_device_id : Pointer(Void)
       format : Void
       channels : Void
@@ -1616,7 +1616,7 @@ module Miniaudio
       share_mode : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7140:5)
+    struct DeviceConfigWasapi
       usage : Void
       no_auto_convert_src : Void
       no_default_quality_src : Void
@@ -1626,30 +1626,30 @@ module Miniaudio
       loopback_process_exclude : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7150:5)
+    struct DeviceConfigAlsa
       no_m_map : Void
       no_auto_format : Void
       no_auto_channels : Void
       no_auto_resample : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7157:5)
+    struct DeviceConfigPulse
       p_stream_name_playback : Pointer(LibC::Char)
       p_stream_name_capture : Pointer(LibC::Char)
       channel_map : LibC::Int
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7163:5)
+    struct DeviceConfigCoreaudio
       allow_nominal_sample_rate_change : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7167:5)
+    struct DeviceConfigOpensl
       stream_type : Void
       recording_preset : Void
       enable_compatibility_workarounds : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7173:5)
+    struct DeviceConfigAaudio
       usage : Void
       content_type : Void
       input_preset : Void
@@ -1680,10 +1680,10 @@ module Miniaudio
       name : StaticArray(LibC::Char, 256)
       is_default : Void
       native_data_format_count : Void
-      native_data_formats : StaticArray(Struct, 64) # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7093:5)
+      native_data_formats : StaticArray(DeviceInfoNativeDataFormat, 64)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7093:5)
+    struct DeviceInfoNativeDataFormat
       format : Void
       channels : Void
       sample_rate : Void
@@ -1705,27 +1705,27 @@ module Miniaudio
     struct ContextCommandWasapi
       code : LibC::Int
       p_event : Pointer(Void)
-      data : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7351:5)
+      data : ContextCommandWasapiData
     end
 
-    union Union                     # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7351:5)
-      quit : Struct                 # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7353:9)
-      create_audio_client : Struct  # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7357:9)
-      release_audio_client : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7364:9)
+    union ContextCommandWasapiData
+      quit : ContextCommandWasapiDataQuit
+      create_audio_client : ContextCommandWasapiDataCreateAudioClient
+      release_audio_client : ContextCommandWasapiDataReleaseAudioClient
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7353:9)
+    struct ContextCommandWasapiDataQuit
       _unused : LibC::Int
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7357:9)
+    struct ContextCommandWasapiDataCreateAudioClient
       device_type : Void
       p_audio_client : Pointer(Void)
       pp_audio_client_service : Pointer(Pointer(Void))
       p_result : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:7364:9)
+    struct ContextCommandWasapiDataReleaseAudioClient
       p_device : Pointer(Void)
       device_type : Void
     end
@@ -1861,20 +1861,20 @@ module Miniaudio
       input_cache_consumed : Void
       input_cache_remaining : Void
       allocation_callbacks : Void
-      data : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10018:5)
+      data : DecoderData
     end
 
-    union Union       # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10018:5)
-      vfs : Struct    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10020:9)
-      memory : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10025:9)
+    union DecoderData
+      vfs : DecoderDataVfs
+      memory : DecoderDataMemory
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10020:9)
+    struct DecoderDataVfs
       p_vfs : Pointer(Void)
       file : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10025:9)
+    struct DecoderDataMemory
       p_data : Pointer(Void)
       data_size : Void
       current_read_pos : Void
@@ -1939,14 +1939,14 @@ module Miniaudio
       on_write_pcm_frames : Void
       p_user_data : Pointer(Void)
       p_internal_encoder : Pointer(Void)
-      data : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10149:5)
+      data : EncoderData
     end
 
-    union Union    # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10149:5)
-      vfs : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10151:9)
+    union EncoderData
+      vfs : EncoderDataVfs
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10151:9)
+    struct EncoderDataVfs
       p_vfs : Pointer(Void)
       file : Void
     end
@@ -2035,23 +2035,23 @@ module Miniaudio
       ds : Void
       config : Void
       lcg : Void
-      state : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10265:5)
+      state : NoiseState
       _p_heap : Pointer(Void)
       _owns_heap : Void
     end
 
-    union Union         # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10265:5)
-      pink : Struct     # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10267:9)
-      brownian : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10273:9)
+    union NoiseState
+      pink : NoiseStatePink
+      brownian : NoiseStateBrownian
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10267:9)
+    struct NoiseStatePink
       bin : Pointer(Pointer(LibC::Double))
       accumulation : Pointer(LibC::Double)
       counter : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10273:9)
+    struct NoiseStateBrownian
       accumulation : Pointer(LibC::Double)
     end
 
@@ -2099,10 +2099,10 @@ module Miniaudio
       result : Void
       is_looping : Void
       is_connector_initialized : Void
-      connector : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10459:5)
+      connector : ResourceManagerDataBufferNodeConnector
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10459:5)
+    union ResourceManagerDataBufferNodeConnector
       decoder : Void
       buffer : Void
       paged_buffer : Void
@@ -2130,13 +2130,13 @@ module Miniaudio
     end
 
     struct ResourceManagerDataSource
-      backend : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10497:5)
+      backend : ResourceManagerDataSourceBackend
       flags : Void
       execution_counter : Void
       execution_pointer : Void
     end
 
-    union Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10497:5)
+    union ResourceManagerDataSourceBackend
       buffer : Void
       stream : Void
     end
@@ -2170,21 +2170,21 @@ module Miniaudio
 
     struct ResourceManagerDataSupply
       type : Void
-      backend : Union # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10407:5)
+      backend : ResourceManagerDataSupplyBackend
     end
 
-    union Union              # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10407:5)
-      encoded : Struct       # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10409:9)
-      decoded : Struct       # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10414:9)
-      decoded_paged : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10423:9)
+    union ResourceManagerDataSupplyBackend
+      encoded : ResourceManagerDataSupplyBackendEncoded
+      decoded : ResourceManagerDataSupplyBackendDecoded
+      decoded_paged : ResourceManagerDataSupplyBackendDecodedPaged
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10409:9)
+    struct ResourceManagerDataSupplyBackendEncoded
       p_data : Pointer(Void)
       size_in_bytes : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10414:9)
+    struct ResourceManagerDataSupplyBackendDecoded
       p_data : Pointer(Void)
       total_frame_count : Void
       decoded_frame_count : Void
@@ -2193,7 +2193,7 @@ module Miniaudio
       sample_rate : Void
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:10423:9)
+    struct ResourceManagerDataSupplyBackendDecodedPaged
       data : Void
       decoded_frame_count : Void
       sample_rate : Void
@@ -2638,12 +2638,12 @@ module Miniaudio
       is_pitch_disabled : Void
       is_spatialization_disabled : Void
       pinned_listener_index : Void
-      fade_settings : Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:11184:5)
+      fade_settings : EngineNodeFadeSettings
       _owns_heap : Void
       _p_heap : Pointer(Void)
     end
 
-    struct Struct # (unnamed at /home/kojix2/crystal/miniaudio.cr/ext/miniaudio/miniaudio.h:11184:5)
+    struct EngineNodeFadeSettings
       volume_beg : Void
       volume_end : Void
       fade_length_in_frames : Void
